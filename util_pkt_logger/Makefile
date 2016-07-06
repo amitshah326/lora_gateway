@@ -9,7 +9,6 @@ ARCH ?=
 CROSS_COMPILE ?=
 
 ### External constant definitions
-# must get library build option to know if mpsse must be linked or not
 
 include $(LGW_PATH)/library.cfg
 
@@ -20,6 +19,8 @@ AR := $(CROSS_COMPILE)ar
 
 CFLAGS=-O2 -Wall -Wextra -std=c99 -Iinc -I.
 
+OBJDIR = obj
+
 ### Constants for LoRa concentrator HAL library
 # List the library sub-modules that are used by the application
 
@@ -29,9 +30,9 @@ LGW_INC += $(LGW_PATH)/inc/loragw_hal.h
 ### Linking options
 
 ifeq ($(CFG_SPI),native)
-  LIBS := -lloragw -lrt
+  LIBS := -lloragw -lrt -lm
 else ifeq ($(CFG_SPI),ftdi)
-  LIBS := -lloragw -lrt -lmpsse
+  LIBS := -lloragw -lrt -lm -lmpsse
 endif
 
 ### General build targets
@@ -39,7 +40,7 @@ endif
 all: $(APP_NAME)
 
 clean:
-	rm -f obj/*.o
+	rm -f $(OBJDIR)/*.o
 	rm -f $(APP_NAME)
 
 ### HAL library (do no force multiple library rebuild even with 'make -B')
@@ -56,15 +57,18 @@ $(LGW_PATH)/libloragw.a: $(LGW_INC)
 
 ### Sub-modules compilation
 
-obj/parson.o: src/parson.c inc/parson.h
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
+
+$(OBJDIR)/parson.o: src/parson.c inc/parson.h | $(OBJDIR)
 	$(CC) -c $(CFLAGS) $< -o $@
 
 ### Main program compilation and assembly
 
-obj/$(APP_NAME).o: src/$(APP_NAME).c $(LGW_INC) inc/parson.h
+$(OBJDIR)/$(APP_NAME).o: src/$(APP_NAME).c $(LGW_INC) inc/parson.h | $(OBJDIR)
 	$(CC) -c $(CFLAGS) -I$(LGW_PATH)/inc $< -o $@
 
-$(APP_NAME): obj/$(APP_NAME).o $(LGW_PATH)/libloragw.a obj/parson.o
-	$(CC) -L$(LGW_PATH) $< obj/parson.o -o $@ $(LIBS)
+$(APP_NAME): $(OBJDIR)/$(APP_NAME).o $(LGW_PATH)/libloragw.a $(OBJDIR)/parson.o
+	$(CC) -L$(LGW_PATH) $< $(OBJDIR)/parson.o -o $@ $(LIBS)
 
 ### EOF

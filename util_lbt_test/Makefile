@@ -1,6 +1,6 @@
 ### Application-specific constants
 
-APP_NAME := util_tx_continuous
+APP_NAME := util_lbt_test
 
 ### Environment constants 
 
@@ -9,7 +9,6 @@ ARCH ?=
 CROSS_COMPILE ?=
 
 ### External constant definitions
-# must get library build option to know if mpsse must be linked or not
 
 include $(LGW_PATH)/library.cfg
 
@@ -26,9 +25,8 @@ OBJDIR = obj
 # List the library sub-modules that are used by the application
 
 LGW_INC = $(LGW_PATH)/inc/config.h
-LGW_INC += $(LGW_PATH)/inc/loragw_hal.h
 LGW_INC += $(LGW_PATH)/inc/loragw_reg.h
-LGW_INC += $(LGW_PATH)/inc/loragw_aux.h
+LGW_INC += $(LGW_PATH)/inc/loragw_fpga.h
 
 ### Linking options
 
@@ -59,7 +57,6 @@ $(LGW_PATH)/libloragw.a: $(LGW_INC)
 	fi
 
 ### Main program compilation and assembly
-
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
