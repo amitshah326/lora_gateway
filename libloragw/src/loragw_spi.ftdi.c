@@ -122,16 +122,16 @@ int lgw_spi_w(void *spi_target, uint8_t spi_mux_mode, uint8_t spi_mux_target, ui
 	}
 	
 	/* prepare frame to be sent */
-/*	if(spi_mux_mode == LGW_SPI_MUX_MODE1) {
+	if(spi_mux_mode == LGW_SPI_MUX_MODE1) {
 		out_buf[0] = spi_mux_target;
 		out_buf[1] = WRITE_ACCESS | (address & 0x7F);
 		out_buf[2] = data;
 		command_size = 3;
-	} else {*/
+	} else {
 		out_buf[0] = WRITE_ACCESS | (address & 0x7F);
 		out_buf[1] = data;
 		command_size = 2;
-//	}
+	}
 
 	/* MPSSE transaction */
 	a = Start(mpsse);
@@ -167,16 +167,16 @@ int lgw_spi_r(void *spi_target, uint8_t spi_mux_mode, uint8_t spi_mux_target, ui
 	CHECK_NULL(data);
 	
 	/* prepare frame to be sent */
-/*	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
+	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
         	out_buf[0] = spi_mux_target;
         	out_buf[1] = READ_ACCESS | (address & 0x7F);
         	out_buf[2] = 0x00;
         	command_size = 3;
-    	} else {*/
+    	} else {
         	out_buf[0] = READ_ACCESS | (address & 0x7F);
         	out_buf[1] = 0x00;
         	command_size = 2;
-//    	}
+    	}
 	
 	/* MPSSE transaction */
 	a = Start(mpsse);
@@ -224,14 +224,14 @@ int lgw_spi_wb(void *spi_target, uint8_t spi_mux_mode, uint8_t spi_mux_target, u
 	}
 	
 	/* prepare command byte */
-/*	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
+	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
 		command[0] = spi_mux_target;
        		command[1] = WRITE_ACCESS | (address & 0x7F);
         	command_size = 2;
-    	} else {*/
+    	} else {
         	command[0] = WRITE_ACCESS | (address & 0x7F);
         	command_size = 1;
-//   	}
+   	}
 	size_to_do = size + command_size; /* add a byte for the address */
 	
 
@@ -299,14 +299,14 @@ int lgw_spi_rb(void *spi_target, uint8_t spi_mux_mode, uint8_t spi_mux_target, u
 	}
 	
 	/* prepare command byte */
-/*	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
+	if (spi_mux_mode == LGW_SPI_MUX_MODE1) {
                 command[0] = spi_mux_target;
                 command[1] = READ_ACCESS | (address & 0x7F);
                 command_size = 2;
-        } else {*/
+        } else {
                 command[0] = READ_ACCESS | (address & 0x7F);
                 command_size = 1;
-//        }
+        }
         size_to_do = size + command_size; /* add a byte for the address */
 	
 	/* start MPSSE transaction */

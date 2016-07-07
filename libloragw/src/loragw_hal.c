@@ -221,9 +221,7 @@ int load_firmware(uint8_t target, uint8_t *firmware, uint16_t size) {
     lgw_reg_rb( LGW_MCU_PROM_DATA, fw_check, size );
     if (memcmp(firmware, fw_check, size) != 0) {
         printf ("ERROR: Failed to load fw %d\n", (int)target);
-        return -1;
-    }else {
- 	 printf ("SUCCESS: Succeeded to load fw %d\n", (int)target);	
+        return -1;	
     }
 
     /* give back control of the MCU program ram to the MCU */
